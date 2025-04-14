@@ -37,11 +37,13 @@ def test_nothing_append_when_when_do_nothing():
 class OpenTask:
     todolist_id: UUID
     task_id: UUID
+    task_name: str
 
 
 def test_task_opened_when_open_task():
     todolist = Todolist()
     todolist_id = uuid4()
     task_id = uuid4()
-    actual = todolist.decide(OpenTask(todolist_id=todolist_id, task_id= task_id))
+    task_name = f"todo {uuid4()}"
+    actual = todolist.decide(OpenTask(todolist_id=todolist_id, task_id= task_id, task_name=task_name))
     assert actual.uncommitted_event == (TaskOpened(todolist_id=todolist_id), )
