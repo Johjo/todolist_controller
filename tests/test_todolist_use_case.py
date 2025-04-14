@@ -43,11 +43,17 @@ class OpenTask:
 
 
 def test_task_opened_when_open_task():
+    command = any_open_task_command()
+
     todolist = Todolist()
+    actual = todolist.decide(command)
+    assert actual.uncommitted_event == (
+    TaskOpened(todolist_id=command.todolist_id, task_id=command.task_id, task_name=command.task_name),)
+
+
+def any_open_task_command():
     todolist_id = uuid4()
     task_id = uuid4()
     task_name = f"todo {uuid4()}"
     command = OpenTask(todolist_id=todolist_id, task_id=task_id, task_name=task_name)
-    actual = todolist.decide(command)
-    assert actual.uncommitted_event == (
-    TaskOpened(todolist_id=command.todolist_id, task_id=command.task_id, task_name=command.task_name),)
+    return command
