@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from typing import Self
-from uuid import UUID
+from uuid import UUID, uuid4
 
 from todolist_controller.secondary_port import TodolistUseCasePort
 
@@ -31,7 +31,7 @@ def test_nothing_append_when_when_do_nothing():
 
 @dataclass()
 class OpenTask:
-    pass
+    todolist_id: UUID
 
 @dataclass(frozen=True)
 class TaskOpened:
@@ -40,5 +40,6 @@ class TaskOpened:
 
 def test_task_opened_when_open_task():
     todolist = Todolist()
-    actual = todolist.decide(OpenTask())
+    todolist_id = uuid4()
+    actual = todolist.decide(OpenTask(todolist_id=todolist_id))
     assert actual.uncommitted_event == (TaskOpened, )
