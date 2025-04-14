@@ -5,7 +5,7 @@ from uuid import UUID
 
 
 
-@dataclass
+@dataclass(frozen=True, eq=True)
 class TaskPresentation:
     uuid:  UUID
     name: str
