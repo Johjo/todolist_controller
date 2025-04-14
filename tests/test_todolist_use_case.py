@@ -10,8 +10,12 @@ class TodolistUseCase(TodolistUseCasePort):
         raise NotImplementedError
 
 
-class Event:
+@dataclass(frozen=True)
+class TaskOpened:
     pass
+
+Event = TaskOpened
+
 
 
 @dataclass(frozen=True, eq=True)
@@ -32,10 +36,6 @@ def test_nothing_append_when_when_do_nothing():
 @dataclass()
 class OpenTask:
     todolist_id: UUID
-
-@dataclass(frozen=True)
-class TaskOpened:
-    pass
 
 
 def test_task_opened_when_open_task():
