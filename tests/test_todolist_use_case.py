@@ -13,6 +13,7 @@ class TodolistUseCase(TodolistUseCasePort):
 @dataclass(frozen=True)
 class TaskOpened:
     todolist_id: UUID
+    task_id: UUID
 
 Event = TaskOpened
 
@@ -25,7 +26,7 @@ class Todolist:
         pass
 
     def decide(self, command):
-        return Todolist(uncommitted_event=(TaskOpened(command.todolist_id), ))
+        return Todolist(uncommitted_event=(TaskOpened(todolist_id=command.todolist_id, task_id=command.task_id), ))
 
 
 def test_nothing_append_when_when_do_nothing():
@@ -46,4 +47,4 @@ def test_task_opened_when_open_task():
     task_id = uuid4()
     task_name = f"todo {uuid4()}"
     actual = todolist.decide(OpenTask(todolist_id=todolist_id, task_id= task_id, task_name=task_name))
-    assert actual.uncommitted_event == (TaskOpened(todolist_id=todolist_id), )
+    assert actual.uncommitted_event == (TaskOpened(todolist_id=todolist_id, task_id=task_id), )
