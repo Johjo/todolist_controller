@@ -21,7 +21,7 @@ class Todolist:
         pass
 
     def decide(self, command):
-        return Todolist()
+        return Todolist(uncommitted_event=(TaskOpened, ))
 
 
 def test_nothing_append_when_when_do_nothing():
@@ -41,4 +41,4 @@ class TaskOpened:
 def test_task_opened_when_open_task():
     todolist = Todolist()
     actual = todolist.decide(OpenTask())
-    assert actual.uncommitted_event == ( )
+    assert actual.uncommitted_event == (TaskOpened, )
