@@ -20,7 +20,16 @@ class Todolist:
     def open_task(self) -> Self:
         pass
 
+    def decide(self):
+        pass
+
 
 def test_nothing_append_when_when_do_nothing():
     todolist = Todolist()
+    assert todolist.uncommitted_event == ()
+
+
+def test_task_opened_when_open_task():
+    todolist = Todolist()
+    todolist.decide()
     assert todolist.uncommitted_event == ()
