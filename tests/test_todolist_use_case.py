@@ -27,7 +27,8 @@ class Todolist:
         pass
 
     def decide(self, command):
-        return Todolist(uncommitted_event=(TaskOpened(todolist_id=command.todolist_id, task_id=command.task_id, task_name=command.task_name), ))
+        event = (TaskOpened(todolist_id=command.todolist_id, task_id=command.task_id, task_name=command.task_name),)
+        return Todolist(uncommitted_event=self.uncommitted_event + event)
 
 
 def test_nothing_append_when_when_do_nothing():
@@ -52,12 +53,21 @@ def test_task_opened_when_open_task():
 
 
 def test_two_tasks_opened_when_open_two_tasks():
-    command = any_open_task_command()
+    first_command = any_open_task_command()
+    second_command = any_open_task_command()
 
     todolist = Todolist()
-    actual = todolist.decide(command)
+    actual = todolist.decide(first_command)
+    actual = actual.decide(second_command)
+
     assert actual.uncommitted_event == (
-    TaskOpened(todolist_id=command.todolist_id, task_id=command.task_id, task_name=command.task_name),)
+        TaskOpened(todolist_id=first_command.todolist_id,
+                   task_id=first_command.task_id,
+                   task_name=first_command.task_name),
+        TaskOpened(todolist_id=second_command.todolist_id,
+                   task_id=second_command.task_id,
+                   task_name=second_command.task_name),
+    )
 
 
 
