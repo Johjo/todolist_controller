@@ -8,9 +8,6 @@ class TodolistUseCase(TodolistUseCasePort):
     def open_task(self, todolist_id: UUID, task_id: UUID, task_description: str) -> None:
         raise NotImplementedError
 
-    def tasks(self, todolist_id: UUID) -> list[TaskPresentation]:
-        raise NotImplementedError
-
 
 def test_xxx_when_yyy():
     sut = TodolistUseCase()
