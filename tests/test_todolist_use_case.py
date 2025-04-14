@@ -13,3 +13,6 @@ class Todolist:
     pass
 
 
+def test_xxx_when_yyy():
+    todolist = Todolist()
+    sut = TodolistUseCase()
