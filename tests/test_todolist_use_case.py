@@ -21,7 +21,6 @@ class Todolist:
         pass
 
 
-def test_xxx_when_yyy():
+def test_nothing_append_when_when_do_nothing():
     todolist = Todolist()
-
     assert todolist.uncommitted_event == ()
