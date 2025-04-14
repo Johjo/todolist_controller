@@ -9,5 +9,7 @@ class TodolistUseCase(TodolistUseCasePort):
         raise NotImplementedError
 
 
-def test_xxx_when_yyy():
-    sut = TodolistUseCase()
+class Todolist:
+    pass
+
+
