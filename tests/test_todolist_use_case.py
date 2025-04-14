@@ -21,12 +21,10 @@ class Todolist:
         pass
 
     def uncommitted_event(self) -> list[Event]:
-        pass
+        return []
 
 
 def test_xxx_when_yyy():
     todolist = Todolist()
-    todolist.open_task()
-    sut = TodolistUseCase()
 
-    todolist.uncommitted_event()
+    assert todolist.uncommitted_event() == []
