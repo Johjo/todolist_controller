@@ -33,7 +33,7 @@ def test_nothing_append_when_when_do_nothing():
 class OpenTask:
     pass
 
-
+@dataclass(frozen=True)
 class TaskOpened:
     pass
 
