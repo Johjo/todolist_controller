@@ -22,9 +22,10 @@ Event = TaskOpened
 
 
 
-@dataclass(frozen=True, eq=True)
 class Todolist:
-    uncommitted_event: tuple[Event, ...] = ()
+    def __init__(self, uncommitted_event: tuple[Event, ...] = ()):
+        self.uncommitted_event = uncommitted_event
+
     def open_task(self) -> Self:
         pass
 
