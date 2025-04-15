@@ -2,6 +2,8 @@ from dataclasses import dataclass
 from typing import Self
 from uuid import UUID, uuid4
 
+import pytest
+
 from todolist_controller.secondary_port import TodolistUseCasePort
 
 
@@ -68,6 +70,17 @@ def test_two_tasks_opened_when_open_two_tasks():
                    task_id=second_command.task_id,
                    task_name=second_command.task_name),
     )
+
+
+@pytest.mark.skip
+def test_nothing_happen_when_open_a_task_already_opened():
+    command = any_open_task_command()
+
+    todolist_v1 = Todolist()
+    todolist_v2 = todolist_v1.decide(command)
+    actual = todolist_v2.decide(command)
+    assert actual.uncommitted_event == (
+    TaskOpened(todolist_id=command.todolist_id, task_id=command.task_id, task_name=command.task_name),)
 
 
 
