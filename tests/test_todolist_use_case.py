@@ -26,9 +26,6 @@ class Todolist:
     def __init__(self, uncommitted_event: tuple[Event, ...] = ()):
         self.uncommitted_event = uncommitted_event
 
-    def open_task(self) -> Self:
-        pass
-
     def decide(self, command):
         event = (TaskOpened(todolist_id=command.todolist_id, task_id=command.task_id, task_name=command.task_name),)
         return Todolist(uncommitted_event=self.uncommitted_event + event)
