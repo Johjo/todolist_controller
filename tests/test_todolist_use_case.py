@@ -56,9 +56,9 @@ def test_two_tasks_opened_when_open_two_tasks():
     first_command = any_open_task_command()
     second_command = any_open_task_command()
 
-    todolist = Todolist()
-    actual = todolist.decide(first_command)
-    actual = actual.decide(second_command)
+    todolist_v1 = Todolist()
+    todolist_v2 = todolist_v1.decide(first_command)
+    actual = todolist_v2.decide(second_command)
 
     assert actual.uncommitted_event == (
         TaskOpened(todolist_id=first_command.todolist_id,
