@@ -17,7 +17,7 @@ class TodolistControllerPort:
         pass
 
     @abstractmethod
-    def open_task(self, todolist_uuid: UUID, task_description: str) -> UUID:
+    def open_task(self, todolist_id: UUID, title: str, description: str) -> UUID:
         pass
 
     @abstractmethod

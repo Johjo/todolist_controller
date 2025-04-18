@@ -2,7 +2,9 @@ from abc import ABC, abstractmethod
 from typing import List
 from uuid import UUID
 
-from todolist_controller.secondary_port import TodolistUseCasePort, UuidGeneratorPort
+from todolist_hexagon.todolist_usecase import TodolistUseCasePort
+
+from todolist_controller.secondary_port import UuidGeneratorPort
 from todolist_controller.primary_port import TodolistControllerPort, TaskPresentation
 
 
@@ -21,10 +23,10 @@ class TodolistController(TodolistControllerPort):
     def create_todolist(self) -> UUID:
         return self._uuid_generator.generate_uuid()
 
-    def open_task(self, todolist_id: UUID, task_description: str) -> UUID:
+    def open_task(self, todolist_id: UUID, title: str, description: str) -> UUID:
         task_id : UUID = self._uuid_generator.generate_uuid()
-        self._in_todolist.open_task(todolist_id=todolist_id, task_id=task_id,
-                                    task_description=task_description)
+        self._in_todolist.open_task(todolist_key=todolist_id, task_key=task_id,
+                                    title=title, description=description)
 
         return task_id
 

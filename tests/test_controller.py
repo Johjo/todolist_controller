@@ -2,10 +2,11 @@ from dataclasses import dataclass
 from uuid import UUID, uuid4
 
 import pytest
+from todolist_hexagon.todolist_usecase import TodolistUseCasePort
 
 from todolist_controller.controller import TodolistController, TodolistReadPort
 from todolist_controller.primary_port import TaskPresentation
-from todolist_controller.secondary_port import TodolistUseCasePort, UuidGeneratorPort
+from todolist_controller.secondary_port import UuidGeneratorPort
 
 
 class UuidGeneratorForTest(UuidGeneratorPort):
@@ -26,10 +27,16 @@ class UuidGeneratorForTest(UuidGeneratorPort):
 class OpenTask:
     todolist_id: UUID
     task_id: UUID
-    task_description: str
+    title: str
+    description: str
 
 
-History = OpenTask
+@dataclass
+class CreateTodolist:
+    todolist_key: UUID
+
+
+History = OpenTask | CreateTodolist
 
 
 class TodolistReadForTest(TodolistReadPort):
@@ -48,8 +55,11 @@ class TodolistUseCaseForTest(TodolistUseCasePort):
         self._tasks: dict[UUID, list[TaskPresentation]] = {}
         self._history: list[History] = []
 
-    def open_task(self, todolist_id: UUID, task_id: UUID, task_description: str) -> None:
-        self._history.append(OpenTask(todolist_id=todolist_id, task_id=task_id, task_description=task_description))
+    def create_todolist(self, key: UUID) -> None:
+        self._history.append(CreateTodolist(todolist_key=key))
+
+    def open_task(self, todolist_key: UUID, task_key: UUID, title: str, description: str) -> None:
+        self._history.append(OpenTask(todolist_id=todolist_key, task_id=task_key, title=title, description=description))
 
     def tasks(self, todolist_id: UUID) -> list[TaskPresentation]:
         return self._tasks[todolist_id]
@@ -71,22 +81,34 @@ def test_get_created_todolist_uuid_when_create_todolist(uuid_generator: UuidGene
     assert todolist_id == expected_todolist_id
 
 
+def test_create_todolist_via_use_case_when_create_todolist(uuid_generator: UuidGeneratorForTest,
+                                                           todolist_use_case: TodolistUseCaseForTest,
+                                                           sut: TodolistController) -> None:
+    todolist_key = uuid4()
+    uuid_generator.feed(todolist_key)
+
+    sut.create_todolist()
+    todolist_use_case.create_todolist(key=todolist_key)
+
+    assert todolist_use_case.history() == [CreateTodolist(todolist_key=todolist_key)]
+
+
 def test_create_task_via_use_case_when_create_task(uuid_generator: UuidGeneratorForTest,
                                                    todolist_use_case: TodolistUseCaseForTest,
                                                    sut: TodolistController) -> None:
-    expected = OpenTask(todolist_id=(uuid4()), task_id=uuid4(), task_description="buy the milk")
+    expected = OpenTask(todolist_id=(uuid4()), task_id=uuid4(), title="buy the milk", description="description")
     uuid_generator.feed(expected.task_id)
 
-    sut.open_task(todolist_id=expected.todolist_id, task_description=expected.task_description)
+    sut.open_task(todolist_id=expected.todolist_id, title=expected.title, description=expected.description)
 
     assert todolist_use_case.history() == [expected]
 
 
 def test_give_task_id_when_create_task(uuid_generator: UuidGeneratorForTest, sut: TodolistController) -> None:
-    expected = OpenTask(todolist_id=(uuid4()), task_id=uuid4(), task_description="buy the milk")
+    expected = OpenTask(todolist_id=(uuid4()), task_id=uuid4(), title="buy the milk", description="description")
     uuid_generator.feed(expected.task_id)
 
-    actual = sut.open_task(todolist_id=expected.todolist_id, task_description=expected.task_description)
+    actual = sut.open_task(todolist_id=expected.todolist_id, title=expected.title, description=expected.description)
 
     assert actual == expected.task_id
 
