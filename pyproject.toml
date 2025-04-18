@@ -8,14 +8,13 @@ authors = [
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
-    "pytest (>=8.3.5,<9.0.0)"
+    "pytest (>=8.3.5,<9.0.0)",
+    "todolist-hexagon @ git+https://github.com/Johjo/todolist_hexagon.git"
 ]
 
 [tool.poetry]
 packages = [{include = "todolist_controller", from = "src"}]
 
-[tool.poetry.package]
-include = ["todolist_controller/py.typed"]
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
