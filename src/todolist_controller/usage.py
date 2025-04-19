@@ -1,4 +1,4 @@
-from uuid import UUID
+from uuid import UUID, uuid4
 
 from todolist_hexagon.events import EventList
 from todolist_hexagon.ports import EventStorePort, AggregateEvent
@@ -16,7 +16,7 @@ def create_todolist_controller() -> TodolistControllerPort:
 
 class UuidGeneratorRandom(UuidGeneratorPort):
     def generate_uuid(self) -> UUID:
-        raise NotImplementedError()
+        return uuid4()
 
 
 class EventStoreInMemory(EventStorePort):
