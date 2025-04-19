@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from typing import List
 from uuid import UUID
 
+from todolist_hexagon.secondary.event_store_in_memory import EventStoreInMemory
 from todolist_hexagon.todolist_usecase import TodolistUseCasePort
 
 from todolist_controller.secondary_port import UuidGeneratorPort
@@ -15,10 +16,11 @@ class TodolistReadPort(ABC):
 
 
 class TodolistController(TodolistControllerPort):
-    def __init__(self, uuid_generator: UuidGeneratorPort, todolist: TodolistUseCasePort, todolist_read: TodolistReadPort) -> None:
+    def __init__(self, uuid_generator: UuidGeneratorPort, todolist: TodolistUseCasePort, todolist_read: TodolistReadPort, event_store: EventStoreInMemory) -> None:
         self._in_todolist = todolist
         self._uuid_generator : UuidGeneratorPort = uuid_generator
         self._from_todolist = todolist_read
+        self._event_store = event_store
 
     def create_todolist(self) -> UUID:
         return self._uuid_generator.generate_uuid()
@@ -30,12 +32,15 @@ class TodolistController(TodolistControllerPort):
 
         return task_key
 
-
     def get_tasks(self, todolist_key: UUID) -> List[TaskPresentation]:
         return self._from_todolist.tasks(todolist_key=todolist_key)
+
 
     def get_task(self, todolist_key: UUID, task_key: UUID) -> TaskPresentation | None:
         raise NotImplementedError()
 
     def close_task(self, todolist_key: UUID, task_key: UUID) -> None:
         raise NotImplementedError()
+
+    def get_raw_todolist(self, todolist_key: UUID) -> str:
+        return str(self._event_store.events_for(key=todolist_key))

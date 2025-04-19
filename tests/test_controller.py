@@ -125,7 +125,7 @@ def test_give_all_tasks(sut: TodolistController, todolist_read: TodolistReadForT
 @pytest.fixture
 def sut(uuid_generator: UuidGeneratorForTest, todolist_use_case: TodolistUseCaseForTest,
         todolist_read: TodolistReadForTest) -> TodolistController:
-    return TodolistController(uuid_generator, todolist_use_case, todolist_read)
+    return TodolistController(uuid_generator, todolist_use_case, todolist_read, event_store=None)
 
 
 @pytest.fixture

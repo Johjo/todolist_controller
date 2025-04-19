@@ -31,3 +31,7 @@ class TodolistControllerPort:
     @abstractmethod
     def close_task(self, todolist_key: UUID, task_key: UUID) -> None:
         pass
+
+    @abstractmethod
+    def get_raw_todolist(self, todolist_key: UUID) -> str:
+        pass
