@@ -10,7 +10,7 @@ from todolist_controller.primary_port import TodolistControllerPort, TaskPresent
 
 class TodolistReadPort(ABC):
     @abstractmethod
-    def tasks(self, todolist_id: UUID) -> list[TaskPresentation]:
+    def tasks(self, todolist_key: UUID) -> list[TaskPresentation]:
         pass
 
 
@@ -23,19 +23,19 @@ class TodolistController(TodolistControllerPort):
     def create_todolist(self) -> UUID:
         return self._uuid_generator.generate_uuid()
 
-    def open_task(self, todolist_id: UUID, title: str, description: str) -> UUID:
-        task_id : UUID = self._uuid_generator.generate_uuid()
-        self._in_todolist.open_task(todolist_key=todolist_id, task_key=task_id,
+    def open_task(self, todolist_key: UUID, title: str, description: str) -> UUID:
+        task_key : UUID = self._uuid_generator.generate_uuid()
+        self._in_todolist.open_task(todolist_key=todolist_key, task_key=task_key,
                                     title=title, description=description)
 
-        return task_id
+        return task_key
 
 
-    def get_tasks(self, todolist_id: UUID) -> List[TaskPresentation]:
-        return self._from_todolist.tasks(todolist_id=todolist_id)
+    def get_tasks(self, todolist_key: UUID) -> List[TaskPresentation]:
+        return self._from_todolist.tasks(todolist_key=todolist_key)
 
-    def get_task(self, todolist_id: UUID, task_id: UUID) -> TaskPresentation | None:
+    def get_task(self, todolist_key: UUID, task_key: UUID) -> TaskPresentation | None:
         raise NotImplementedError()
 
-    def close_task(self, todolist_id: UUID, task_id: UUID) -> None:
+    def close_task(self, todolist_key: UUID, task_key: UUID) -> None:
         raise NotImplementedError()

@@ -28,7 +28,8 @@ class EventStoreInMemory(EventStorePort):
 
 
 class TodolistRead(TodolistReadPort):
-    def tasks(self, todolist_id: UUID) -> list[TaskPresentation]:
-        raise NotImplementedError()
+    def tasks(self, todolist_key: UUID) -> list[TaskPresentation]:
+        print("TodolistRead not implemented")
+        return []
 
 
