@@ -157,7 +157,7 @@ pytest = ">=8.3.5,<9.0.0"
 type = "git"
 url = "https://github.com/Johjo/todolist_hexagon.git"
 reference = "HEAD"
-resolved_reference = "83cb4da23b406a9ccb19a10f061cd587b881090f"
+resolved_reference = "1bba6edb295ca13f26d8784df6f9974817d9505a"
 
 [[package]]
 name = "typing-extensions"
