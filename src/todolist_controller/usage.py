@@ -21,7 +21,7 @@ class UuidGeneratorRandom(UuidGeneratorPort):
 
 class EventStoreInMemory(EventStorePort):
     def save(self, *aggregate_event: AggregateEvent) -> None:
-        pass
+        print(aggregate_event)
 
     def events_for(self, key: UUID) -> EventList:
         raise NotImplementedError()
