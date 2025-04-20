@@ -88,7 +88,6 @@ def test_create_todolist_via_use_case_when_create_todolist(uuid_generator: UuidG
     uuid_generator.feed(todolist_key)
 
     sut.create_todolist()
-    todolist_use_case.create_todolist(key=todolist_key)
 
     assert todolist_use_case.history() == [CreateTodolist(todolist_key=todolist_key)]
 
