@@ -55,8 +55,8 @@ class TodolistUseCaseForTest(TodolistUseCasePort):
         self._tasks: dict[UUID, list[TaskPresentation]] = {}
         self._history: list[History] = []
 
-    def create_todolist(self, key: UUID) -> None:
-        self._history.append(CreateTodolist(todolist_key=key))
+    def create_todolist(self, todolist_key: UUID) -> None:
+        self._history.append(CreateTodolist(todolist_key=todolist_key))
 
     def open_task(self, todolist_key: UUID, task_key: UUID, title: str, description: str) -> None:
         self._history.append(OpenTask(todolist_key=todolist_key, task_key=task_key, title=title, description=description))

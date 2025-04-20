@@ -24,7 +24,7 @@ class TodolistController(TodolistControllerPort):
 
     def create_todolist(self) -> UUID:
         todolist_key = self._uuid_generator.generate_uuid()
-        self._in_todolist.create_todolist(key=todolist_key)
+        self._in_todolist.create_todolist(todolist_key=todolist_key)
         return todolist_key
 
     def open_task(self, todolist_key: UUID, title: str, description: str) -> UUID:
