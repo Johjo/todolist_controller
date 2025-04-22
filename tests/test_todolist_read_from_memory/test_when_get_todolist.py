@@ -12,8 +12,8 @@ from todolist_controller.uuid_generator_queue import UuidGeneratorQueue
 
 
 def test_give_no_task_when_task_is_empty(sut: TodolistReadFromMemory) -> None:
-    tasks = sut.get_todolist(todolist_key=uuid4())
-    assert tasks == []
+    todolist = sut.get_todolist(todolist_key=uuid4())
+    assert todolist == []
 
 
 def test_give_no_task_when_todolist_is_newly_created(uuid_generator: UuidGeneratorRandom, sut: TodolistReadFromMemory, controller: TodolistController) -> None:
