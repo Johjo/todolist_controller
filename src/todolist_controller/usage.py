@@ -1,12 +1,10 @@
 from uuid import UUID, uuid4
 
-from todolist_hexagon.events import EventList
-from todolist_hexagon.ports import EventStorePort, AggregateEvent
 from todolist_hexagon.secondary.event_store_in_memory import EventStoreInMemory
 from todolist_hexagon.todolist_usecase import TodolistUseCase
 
-from todolist_controller.controller import TodolistController, TodolistReadPort
-from todolist_controller.primary_port import TaskPresentation, TodolistControllerPort
+from todolist_controller.controller import TodolistController
+from todolist_controller.primary_port import TodolistControllerPort
 from todolist_controller.secondary_port import UuidGeneratorPort
 from todolist_controller.todolist_read_from_memory import TodolistReadFromMemory
 
@@ -20,12 +18,4 @@ def create_todolist_controller() -> TodolistControllerPort:
 class UuidGeneratorRandom(UuidGeneratorPort):
     def generate_uuid(self) -> UUID:
         return uuid4()
-
-
-
-class TodolistRead(TodolistReadPort):
-    def get_todolist(self, todolist_key: UUID) -> list[TaskPresentation]:
-        print("TodolistRead not implemented")
-        return []
-
 

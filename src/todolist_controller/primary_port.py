@@ -1,15 +1,8 @@
 from abc import abstractmethod
-from dataclasses import dataclass
-from typing import List, Optional, Any
 from uuid import UUID
 
-
-
-@dataclass(frozen=True, eq=True)
-class TaskPresentation:
-    key:  UUID
-    name: str
-    events: list[Any] | None = None
+from todolist_controller.presentation.task import TaskPresentation
+from todolist_controller.presentation.todolist import TodolistPresentation
 
 
 class TodolistControllerPort:
@@ -22,7 +15,7 @@ class TodolistControllerPort:
         pass
 
     @abstractmethod
-    def get_todolist(self, todolist_key: UUID) -> List[TaskPresentation]:
+    def get_todolist(self, todolist_key: UUID) -> TodolistPresentation:
         pass
 
     @abstractmethod

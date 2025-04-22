@@ -6,12 +6,14 @@ from todolist_hexagon.secondary.event_store_in_memory import EventStoreInMemory
 from todolist_hexagon.todolist_usecase import TodolistUseCasePort
 
 from todolist_controller.secondary_port import UuidGeneratorPort
-from todolist_controller.primary_port import TodolistControllerPort, TaskPresentation
+from todolist_controller.primary_port import TodolistControllerPort
+from todolist_controller.presentation.task import TaskPresentation
+from todolist_controller.presentation.todolist import TodolistPresentation
 
 
 class TodolistReadPort(ABC):
     @abstractmethod
-    def get_todolist(self, todolist_key: UUID) -> list[TaskPresentation]:
+    def get_todolist(self, todolist_key: UUID) -> TodolistPresentation:
         pass
 
     @abstractmethod
@@ -37,7 +39,7 @@ class TodolistController(TodolistControllerPort):
 
         return task_key
 
-    def get_todolist(self, todolist_key: UUID) -> List[TaskPresentation]:
+    def get_todolist(self, todolist_key: UUID) -> TodolistPresentation:
         return self._from_todolist.get_todolist(todolist_key=todolist_key)
 
 
