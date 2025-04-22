@@ -31,11 +31,11 @@ class GetTodolistBuiltIn:
                     raise Exception(f"Event {event} is not implemented")
         return task_keys
 
-    def __task_presentation_or_default(self, task_key : UUID) -> TaskPresentation:
+    def __task_presentation_or_default(self, task_key : UUID) -> Task:
         task = self.__task_presentation(task_key=task_key)
-        return task if task is not None else TaskPresentation(key=task_key, name="?")
+        return task if task is not None else Task(key=task_key, name="?")
 
-    def __task_presentation(self, task_key: UUID) -> TaskPresentation | None:
+    def __task_presentation(self, task_key: UUID) -> Task | None:
         task_presentation = None
 
         for event in self._event_store.events_for(task_key):

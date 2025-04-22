@@ -21,7 +21,7 @@ class TodolistReadPort(ABC):
         pass
 
 class TodolistController(TodolistControllerPort):
-    def __init__(self, uuid_generator: UuidGeneratorPort, todolist: TodolistUseCasePort, todolist_read: TodolistReadPort, event_store: EventStoreInMemory) -> None:
+    def __init__(self, uuid_generator: UuidGeneratorPort, todolist: TodolistUseCasePort, todolist_read: TodolistReadPort, event_store: EventStoreInMemory | None) -> None:
         self._in_todolist = todolist
         self._uuid_generator : UuidGeneratorPort = uuid_generator
         self._from_todolist = todolist_read
