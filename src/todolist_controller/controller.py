@@ -51,8 +51,8 @@ class TodolistController(TodolistControllerPort):
     def get_task(self, task_key: UUID) -> TaskPresentation | None:
         return self._from_todolist.get_task(task_key=task_key)
 
-    def close_task(self, todolist_key: UUID, task_key: UUID) -> None:
-        raise NotImplementedError()
+    def close_task(self, task_key: UUID) -> None:
+        self._in_todolist.close_task(task_key=task_key)
 
     def get_events(self, aggregate_key: UUID) -> EventList:
         return self._from_todolist.get_events(aggregate_key=aggregate_key)
