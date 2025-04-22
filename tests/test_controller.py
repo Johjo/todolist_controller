@@ -42,12 +42,20 @@ History = OpenTask | CreateTodolist
 class TodolistReadForTest(TodolistReadPort):
     def __init__(self) -> None:
         self._todolist: dict[UUID, list[TaskPresentation]] = {}
+        self._tasks: dict[UUID, TaskPresentation] = {}
 
-    def tasks(self, todolist_key: UUID) -> list[TaskPresentation]:
+
+    def get_todolist(self, todolist_key: UUID) -> list[TaskPresentation]:
         return self._todolist[todolist_key]
 
-    def feed(self, todolist_key: UUID, *tasks: TaskPresentation) -> None:
+    def feed_todolist(self, todolist_key: UUID, *tasks: TaskPresentation) -> None:
         self._todolist[todolist_key] = list(tasks)
+
+    def feed_task(self, task_key: UUID, task_presentation: TaskPresentation) -> None:
+        self._tasks[task_key] = task_presentation
+
+    def get_task(self, task_key: UUID) -> TaskPresentation:
+        return self._tasks[task_key]
 
 
 class TodolistUseCaseForTest(TodolistUseCasePort):
@@ -112,13 +120,21 @@ def test_give_task_key_when_create_task(uuid_generator: UuidGeneratorForTest, su
     assert actual == expected.task_key
 
 
-def test_give_all_tasks(sut: TodolistController, todolist_read: TodolistReadForTest) -> None:
+def test_give_todolist(sut: TodolistController, todolist_read: TodolistReadForTest) -> None:
     todolist_key = uuid4()
-    expected = [TaskPresentation(uuid=uuid4(), name="buy the milk"),
-                TaskPresentation(uuid=uuid4(), name="eat something")]
-    todolist_read.feed(todolist_key, *expected)
+    expected = [TaskPresentation(key=uuid4(), name="buy the milk"),
+                TaskPresentation(key=uuid4(), name="eat something")]
+    todolist_read.feed_todolist(todolist_key, *expected)
 
-    assert sut.get_tasks(todolist_key=todolist_key) == expected
+    assert sut.get_todolist(todolist_key=todolist_key) == expected
+
+
+def test_give_task(sut: TodolistController, todolist_read: TodolistReadForTest) -> None:
+    expected = TaskPresentation(key=uuid4(), name=f"buy the milk {uuid4()}")
+    todolist_read.feed_task(expected.key, expected)
+
+    actual = sut.get_task(task_key=expected.key)
+    assert actual == expected
 
 
 @pytest.fixture

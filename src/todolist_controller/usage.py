@@ -24,7 +24,7 @@ class UuidGeneratorRandom(UuidGeneratorPort):
 
 
 class TodolistRead(TodolistReadPort):
-    def tasks(self, todolist_key: UUID) -> list[TaskPresentation]:
+    def get_todolist(self, todolist_key: UUID) -> list[TaskPresentation]:
         print("TodolistRead not implemented")
         return []
 

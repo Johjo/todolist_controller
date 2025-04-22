@@ -12,24 +12,24 @@ from todolist_controller.uuid_generator_queue import UuidGeneratorQueue
 
 
 def test_give_no_task_when_task_is_empty(sut: TodolistReadFromMemory) -> None:
-    tasks = sut.tasks(todolist_key=uuid4())
-    assert tasks == []
+    actual = sut.get_task(task_key=uuid4())
+    assert actual == None
 
 
 def test_give_no_task_when_todolist_is_newly_created(uuid_generator: UuidGeneratorRandom, sut: TodolistReadFromMemory, controller: TodolistController) -> None:
-    todolist_key = controller.create_todolist()
+    controller.create_todolist()
 
-    tasks = sut.tasks(todolist_key=todolist_key)
-    assert tasks == []
+    actual = sut.get_task(task_key=uuid4())
+    assert actual == None
 
 
 
-def test_give_one_task_when_todolist_one_task_is_attached(uuid_generator: UuidGeneratorRandom, sut: TodolistReadFromMemory, controller: TodolistController, event_store: EventStoreInMemory) -> None:
+def test_give_task_when_todolist_one_task_is_attached(uuid_generator: UuidGeneratorRandom, sut: TodolistReadFromMemory, controller: TodolistController, event_store: EventStoreInMemory) -> None:
     todolist_key = controller.create_todolist()
     task_one_key = controller.open_task(todolist_key=todolist_key, title="buy the milk", description="at super market")
 
-    tasks = sut.tasks(todolist_key=todolist_key)
-    assert tasks == [TaskPresentation(uuid=task_one_key, name="buy the milk")]
+    actual = sut.get_task(task_key=task_one_key)
+    assert actual == TaskPresentation(key=task_one_key, name="buy the milk")
 
 
 def test_give_two_tasks_when_todolist_two_task_are_attached(uuid_generator: UuidGeneratorRandom, sut: TodolistReadFromMemory, controller: TodolistController, event_store: EventStoreInMemory) -> None:
@@ -37,8 +37,8 @@ def test_give_two_tasks_when_todolist_two_task_are_attached(uuid_generator: Uuid
     task_one_key = controller.open_task(todolist_key=todolist_key, title="buy the milk", description="at super market")
     task_two_key = controller.open_task(todolist_key=todolist_key, title="buy the water", description="at home")
 
-    tasks = sut.tasks(todolist_key=todolist_key)
-    assert tasks == [TaskPresentation(uuid=task_one_key, name="buy the milk"), TaskPresentation(uuid=task_two_key, name="buy the water")]
+    tasks = sut.get_todolist(todolist_key=todolist_key)
+    assert tasks == [TaskPresentation(key=task_one_key, name="buy the milk"), TaskPresentation(key=task_two_key, name="buy the water")]
 
 
 

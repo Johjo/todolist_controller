@@ -11,9 +11,12 @@ from todolist_controller.primary_port import TodolistControllerPort, TaskPresent
 
 class TodolistReadPort(ABC):
     @abstractmethod
-    def tasks(self, todolist_key: UUID) -> list[TaskPresentation]:
+    def get_todolist(self, todolist_key: UUID) -> list[TaskPresentation]:
         pass
 
+    @abstractmethod
+    def get_task(self, task_key: UUID) -> TaskPresentation | None:
+        pass
 
 class TodolistController(TodolistControllerPort):
     def __init__(self, uuid_generator: UuidGeneratorPort, todolist: TodolistUseCasePort, todolist_read: TodolistReadPort, event_store: EventStoreInMemory) -> None:
@@ -34,12 +37,12 @@ class TodolistController(TodolistControllerPort):
 
         return task_key
 
-    def get_tasks(self, todolist_key: UUID) -> List[TaskPresentation]:
-        return self._from_todolist.tasks(todolist_key=todolist_key)
+    def get_todolist(self, todolist_key: UUID) -> List[TaskPresentation]:
+        return self._from_todolist.get_todolist(todolist_key=todolist_key)
 
 
-    def get_task(self, todolist_key: UUID, task_key: UUID) -> TaskPresentation | None:
-        raise NotImplementedError()
+    def get_task(self, task_key: UUID) -> TaskPresentation | None:
+        return self._from_todolist.get_task(task_key=task_key)
 
     def close_task(self, todolist_key: UUID, task_key: UUID) -> None:
         raise NotImplementedError()
