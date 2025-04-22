@@ -4,7 +4,7 @@ from todolist_hexagon.events import TodoListCreated, TaskAttached, TaskOpened, T
 from todolist_hexagon.ports import EventStorePort
 
 from todolist_controller.presentation.task import TaskPresentation
-from todolist_controller.presentation.todolist import TodolistPresentation
+from todolist_controller.presentation.todolist import TodolistPresentation, Task
 
 
 class GetTodolistBuiltIn:
@@ -43,7 +43,7 @@ class GetTodolistBuiltIn:
                 case TaskOpened():
                     pass
                 case TaskDescribed(title=title, description=description):
-                    task_presentation = TaskPresentation(key=task_key, name=title, events=None)
+                    task_presentation = Task(key=task_key, name=title)
                 case _:
                     raise Exception(f"Event {event} not implemented")
 
