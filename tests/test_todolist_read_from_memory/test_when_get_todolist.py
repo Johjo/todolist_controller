@@ -6,7 +6,7 @@ from todolist_hexagon.todolist_usecase import TodolistUseCase
 
 from todolist_controller.controller import TodolistController
 from todolist_controller.presentation.todolist import TodolistPresentation, Task
-from todolist_controller.todolist_read_from_memory_bis.todolist_read_from_memory import TodolistReadFromMemory
+from todolist_controller.todolist_read_from_memory.todolist_read_from_memory import TodolistReadFromMemory
 from todolist_controller.usage import UuidGeneratorRandom
 from todolist_controller.uuid_generator_queue import UuidGeneratorQueue
 

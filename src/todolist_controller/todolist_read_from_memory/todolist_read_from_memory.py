@@ -1,8 +1,8 @@
 from todolist_hexagon.ports import EventStorePort
 
 from todolist_controller.controller import TodolistReadPort
-from todolist_controller.todolist_read_from_memory_bis.get_task import GetTaskBuiltIn
-from todolist_controller.todolist_read_from_memory_bis.get_todolist import GetTodolistBuiltIn
+from todolist_controller.todolist_read_from_memory.get_task import GetTaskBuiltIn
+from todolist_controller.todolist_read_from_memory.get_todolist import GetTodolistBuiltIn
 
 
 class TodolistReadFromMemory(GetTodolistBuiltIn, GetTaskBuiltIn, TodolistReadPort, ):

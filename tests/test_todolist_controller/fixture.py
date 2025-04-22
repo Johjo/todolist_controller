@@ -74,6 +74,3 @@ class TodolistUseCaseForTest(TodolistUseCasePort):
 
     def history(self) -> list[History]:
         return self._history
-
-    def feed(self, todolist_key: UUID, *tasks: TaskPresentation) -> None:
-        self._tasks[todolist_key] = list(tasks)

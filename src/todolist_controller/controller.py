@@ -50,4 +50,6 @@ class TodolistController(TodolistControllerPort):
         raise NotImplementedError()
 
     def get_raw_todolist(self, todolist_key: UUID) -> str:
+        if not self._event_store:
+            return ""
         return str(self._event_store.events_for(key=todolist_key))

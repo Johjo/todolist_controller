@@ -3,7 +3,6 @@ from uuid import UUID
 from todolist_hexagon.events import TodoListCreated, TaskAttached, TaskOpened, TaskDescribed
 from todolist_hexagon.ports import EventStorePort
 
-from todolist_controller.presentation.task import TaskPresentation
 from todolist_controller.presentation.todolist import TodolistPresentation, Task
 
 
