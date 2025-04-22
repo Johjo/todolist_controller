@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from uuid import UUID
 
+from todolist_hexagon.events import EventList
 from todolist_hexagon.todolist_usecase import TodolistUseCasePort
 
 from todolist_controller.controller import TodolistReadPort
@@ -11,21 +12,28 @@ from todolist_controller.secondary_port import UuidGeneratorPort
 
 class TodolistReadForTest(TodolistReadPort):
     def __init__(self) -> None:
-        self._todolist: dict[UUID, TodolistPresentation] = {}
+        self._events: dict[UUID, EventList] = {}
+        self._todolist: dict[UUID, TodolistPresentation | None] = {}
         self._tasks: dict[UUID, TaskPresentation] = {}
 
 
-    def get_todolist(self, todolist_key: UUID) -> TodolistPresentation:
+    def get_todolist(self, todolist_key: UUID) -> TodolistPresentation | None:
         return self._todolist[todolist_key]
 
     def feed_task(self, task_key: UUID, task_presentation: TaskPresentation) -> None:
         self._tasks[task_key] = task_presentation
 
-    def feed_todolist(self, todolist_key: UUID, todolist: TodolistPresentation, *tasks: TaskPresentation) -> None:
+    def feed_todolist(self, todolist_key: UUID, todolist: TodolistPresentation | None) -> None:
         self._todolist[todolist_key] = todolist
 
     def get_task(self, task_key: UUID) -> TaskPresentation:
         return self._tasks[task_key]
+
+    def feed_event(self, aggregate_key: UUID, expected: EventList) -> None:
+        self._events[aggregate_key] = expected
+
+    def get_events(self, aggregate_key: UUID) -> EventList:
+        return self._events[aggregate_key]
 
 
 class UuidGeneratorForTest(UuidGeneratorPort):

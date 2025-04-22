@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from typing import List
 from uuid import UUID
 
+from todolist_hexagon.events import EventList
 from todolist_hexagon.secondary.event_store_in_memory import EventStoreInMemory
 from todolist_hexagon.todolist_usecase import TodolistUseCasePort
 
@@ -13,11 +14,15 @@ from todolist_controller.presentation.todolist import TodolistPresentation
 
 class TodolistReadPort(ABC):
     @abstractmethod
-    def get_todolist(self, todolist_key: UUID) -> TodolistPresentation:
+    def get_todolist(self, todolist_key: UUID) -> TodolistPresentation | None:
         pass
 
     @abstractmethod
     def get_task(self, task_key: UUID) -> TaskPresentation | None:
+        pass
+
+    @abstractmethod
+    def get_events(self, aggregate_key: UUID) -> EventList:
         pass
 
 class TodolistController(TodolistControllerPort):
@@ -39,7 +44,7 @@ class TodolistController(TodolistControllerPort):
 
         return task_key
 
-    def get_todolist(self, todolist_key: UUID) -> TodolistPresentation:
+    def get_todolist(self, todolist_key: UUID) -> TodolistPresentation | None:
         return self._from_todolist.get_todolist(todolist_key=todolist_key)
 
 
@@ -53,3 +58,7 @@ class TodolistController(TodolistControllerPort):
         if not self._event_store:
             return ""
         return str(self._event_store.events_for(key=todolist_key))
+
+    def get_events(self, aggregate_key: UUID) -> EventList:
+        return self._from_todolist.get_events(aggregate_key=aggregate_key)
+
