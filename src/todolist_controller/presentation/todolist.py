@@ -6,6 +6,7 @@ from uuid import UUID
 class Task:
     key: UUID
     name: str
+    is_opened: bool
 
 @dataclass
 class TodolistPresentation:

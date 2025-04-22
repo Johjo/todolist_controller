@@ -13,15 +13,14 @@ from todolist_controller.uuid_generator_queue import UuidGeneratorQueue
 
 def test_give_no_task_when_task_is_empty(sut: TodolistReadFromMemory) -> None:
     actual = sut.get_task(task_key=uuid4())
-    assert actual == None
+    assert actual is None
 
 
 def test_give_no_task_when_todolist_is_newly_created(uuid_generator: UuidGeneratorRandom, sut: TodolistReadFromMemory, controller: TodolistController) -> None:
     controller.create_todolist()
 
     actual = sut.get_task(task_key=uuid4())
-    assert actual == None
-
+    assert actual is None
 
 
 def test_give_task_when_todolist_one_task_is_attached(uuid_generator: UuidGeneratorRandom, sut: TodolistReadFromMemory, controller: TodolistController, event_store: EventStoreInMemory) -> None:
@@ -29,24 +28,17 @@ def test_give_task_when_todolist_one_task_is_attached(uuid_generator: UuidGenera
     task_one_key = controller.open_task(todolist_key=todolist_key, title="buy the milk", description="at super market")
 
     actual = sut.get_task(task_key=task_one_key)
-    assert actual == TaskPresentation(key=task_one_key, name="buy the milk")
+    assert actual == TaskPresentation(key=task_one_key, name="buy the milk", is_opened=True)
 
 
-# @pytest.mark.skip
-# def test_give_two_tasks_when_todolist_two_task_are_attached(uuid_generator: UuidGeneratorRandom, sut: TodolistReadFromMemory, controller: TodolistController, event_store: EventStoreInMemory) -> None:
-#     todolist_key = controller.create_todolist()
-#     task_one_key = controller.open_task(todolist_key=todolist_key, title="buy the milk", description="at super market")
-#     task_two_key = controller.open_task(todolist_key=todolist_key, title="buy the water", description="at home")
-#
-#     todolist = sut.get_todolist(todolist_key=todolist_key)
-#     assert todolist == TodolistPresentation(tasks=[Task(key=task_one_key, name="buy the milk"), Task(key=task_two_key, name="buy the water")])
+def test_give_task_when_task_is_closed(uuid_generator: UuidGeneratorRandom, sut: TodolistReadFromMemory, controller: TodolistController, event_store: EventStoreInMemory) -> None:
+    todolist_key = controller.create_todolist()
+    task_one_key = controller.open_task(todolist_key=todolist_key, title="buy the milk", description="at super market")
+    controller.close_task(task_key=task_one_key)
 
+    actual = sut.get_task(task_key=task_one_key)
+    assert actual == TaskPresentation(key=task_one_key, name="buy the milk", is_opened=False)
 
-
-
-
-    # tasks = sut.tasks(todolist_key=todolist_key)
-    # assert tasks == []
 
 @pytest.fixture
 def uuid_generator() -> UuidGeneratorRandom:

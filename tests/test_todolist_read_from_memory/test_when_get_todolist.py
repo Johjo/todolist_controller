@@ -29,7 +29,16 @@ def test_give_one_task_when_todolist_one_task_is_attached(uuid_generator: UuidGe
     task_one_key = controller.open_task(todolist_key=todolist_key, title="buy the milk", description="at super market")
 
     tasks = sut.get_todolist(todolist_key=todolist_key)
-    assert tasks == TodolistPresentation(tasks=[Task(key=task_one_key, name="buy the milk")])
+    assert tasks == TodolistPresentation(tasks=[Task(key=task_one_key, name="buy the milk", is_opened=True)])
+
+
+def test_give_todolist_when_task_is_closed(uuid_generator: UuidGeneratorRandom, sut: TodolistReadFromMemory, controller: TodolistController, event_store: EventStoreInMemory) -> None:
+    todolist_key = controller.create_todolist()
+    task_one_key = controller.open_task(todolist_key=todolist_key, title="buy the milk", description="at super market")
+    controller.close_task(task_key=task_one_key)
+
+    tasks = sut.get_todolist(todolist_key=todolist_key)
+    assert tasks == TodolistPresentation(tasks=[Task(key=task_one_key, name="buy the milk", is_opened=False)])
 
 
 def test_give_two_tasks_when_todolist_two_task_are_attached(uuid_generator: UuidGeneratorRandom, sut: TodolistReadFromMemory, controller: TodolistController, event_store: EventStoreInMemory) -> None:
@@ -38,7 +47,7 @@ def test_give_two_tasks_when_todolist_two_task_are_attached(uuid_generator: Uuid
     task_two_key = controller.open_task(todolist_key=todolist_key, title="buy the water", description="at home")
 
     tasks = sut.get_todolist(todolist_key=todolist_key)
-    assert tasks == TodolistPresentation([Task(key=task_one_key, name="buy the milk"), Task(key=task_two_key, name="buy the water")])
+    assert tasks == TodolistPresentation([Task(key=task_one_key, name="buy the milk", is_opened=True), Task(key=task_two_key, name="buy the water", is_opened=True)])
 
 
 

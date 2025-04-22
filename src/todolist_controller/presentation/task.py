@@ -7,4 +7,4 @@ from uuid import UUID
 class TaskPresentation:
     key:  UUID
     name: str
-    events: list[Any] | None = None
+    is_opened: bool

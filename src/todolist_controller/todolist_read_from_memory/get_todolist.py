@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from todolist_hexagon.events import TodoListCreated, TaskAttached, TaskOpened, TaskDescribed
+from todolist_hexagon.events import TodoListCreated, TaskAttached, TaskOpened, TaskDescribed, TaskClosed
 from todolist_hexagon.ports import EventStorePort
 
 from todolist_controller.presentation.todolist import TodolistPresentation, Task
@@ -32,19 +32,27 @@ class GetTodolistBuiltIn:
 
     def __task_presentation_or_default(self, task_key : UUID) -> Task:
         task = self.__task_presentation(task_key=task_key)
-        return task if task is not None else Task(key=task_key, name="?")
+        return task if task is not None else Task(key=task_key, name="?", is_opened=False)
 
     def __task_presentation(self, task_key: UUID) -> Task | None:
         task_presentation = None
+        task_title = None
+        task_is_opened = None
 
         for event in self._event_store.events_for(task_key):
             match event:
                 case TaskOpened():
-                    pass
+                    task_is_opened = True
+                case TaskClosed():
+                    task_is_opened = False
                 case TaskDescribed(title=title, description=description):
-                    task_presentation = Task(key=task_key, name=title)
+                    task_title = title
                 case _:
                     raise Exception(f"Event {event} not implemented")
 
-        return task_presentation
+        if task_title is None or task_is_opened is None:
+            return None
+
+        return Task(key=task_key, name=task_title, is_opened=task_is_opened)
+
 
