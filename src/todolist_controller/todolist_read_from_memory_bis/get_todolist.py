@@ -3,6 +3,7 @@ from uuid import UUID
 from todolist_hexagon.events import TodoListCreated, TaskAttached
 from todolist_hexagon.ports import EventStorePort
 
+from todolist_controller.presentation.task import TaskPresentation
 from todolist_controller.presentation.todolist import TodolistPresentation
 
 
@@ -12,7 +13,7 @@ class GetTodolistBuiltIn:
 
     def get_todolist(self, todolist_key: UUID) -> TodolistPresentation:
         task_keys = self.__task_keys(todolist_key=todolist_key)
-        return [self._task_presentation_or_default(task_key) for task_key in task_keys]
+        return [self.__task_presentation_or_default(task_key) for task_key in task_keys]
 
     def __task_keys(self, todolist_key: UUID) -> list[UUID]:
         todolist_events = self._event_store.events_for(key=todolist_key)
@@ -27,3 +28,7 @@ class GetTodolistBuiltIn:
                 case _:
                     raise Exception(f"Event {event} is not implemented")
         return task_keys
+
+    def __task_presentation_or_default(self, task_key : UUID) -> TaskPresentation:
+        task = self._task_presentation(task_key=task_key)
+        return task if task is not None else TaskPresentation(key=task_key, name="?")
