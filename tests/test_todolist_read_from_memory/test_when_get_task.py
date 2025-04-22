@@ -6,6 +6,7 @@ from todolist_hexagon.todolist_usecase import TodolistUseCase
 
 from todolist_controller.controller import TodolistController
 from todolist_controller.presentation.task import TaskPresentation
+from todolist_controller.presentation.todolist import TodolistPresentation
 from todolist_controller.todolist_read_from_memory_bis.todolist_read_from_memory import TodolistReadFromMemory
 from todolist_controller.usage import UuidGeneratorRandom
 from todolist_controller.uuid_generator_queue import UuidGeneratorQueue
@@ -37,8 +38,8 @@ def test_give_two_tasks_when_todolist_two_task_are_attached(uuid_generator: Uuid
     task_one_key = controller.open_task(todolist_key=todolist_key, title="buy the milk", description="at super market")
     task_two_key = controller.open_task(todolist_key=todolist_key, title="buy the water", description="at home")
 
-    tasks = sut.get_todolist(todolist_key=todolist_key)
-    assert tasks == [TaskPresentation(key=task_one_key, name="buy the milk"), TaskPresentation(key=task_two_key, name="buy the water")]
+    todolist = sut.get_todolist(todolist_key=todolist_key)
+    assert todolist == TodolistPresentation(tasks=[TaskPresentation(key=task_one_key, name="buy the milk"), TaskPresentation(key=task_two_key, name="buy the water")])
 
 
 

@@ -15,7 +15,7 @@ class GetTodolistBuiltIn:
         task_keys = self.__task_keys(todolist_key=todolist_key)
         if task_keys is None:
             return None
-        return [self.__task_presentation_or_default(task_key) for task_key in task_keys]
+        return TodolistPresentation(tasks=[self.__task_presentation_or_default(task_key) for task_key in task_keys])
 
     def __task_keys(self, todolist_key: UUID) -> list[UUID]:
         todolist_events = self._event_store.events_for(key=todolist_key)
