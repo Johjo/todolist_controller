@@ -11,10 +11,10 @@ class GetTodolistBuiltIn:
         self._event_store = event_store
 
     def get_todolist(self, todolist_key: UUID) -> TodolistPresentation:
-        task_keys = self._task_keys(todolist_key=todolist_key)
+        task_keys = self.__task_keys(todolist_key=todolist_key)
         return [self._task_presentation_or_default(task_key) for task_key in task_keys]
 
-    def _task_keys(self, todolist_key: UUID) -> list[UUID]:
+    def __task_keys(self, todolist_key: UUID) -> list[UUID]:
         todolist_events = self._event_store.events_for(key=todolist_key)
         task_keys : list[UUID] = []
         for event in todolist_events:
