@@ -13,15 +13,17 @@ class GetTodolistBuiltIn:
 
     def get_todolist(self, todolist_key: UUID) -> TodolistPresentation:
         task_keys = self.__task_keys(todolist_key=todolist_key)
+        if task_keys is None:
+            return None
         return [self.__task_presentation_or_default(task_key) for task_key in task_keys]
 
     def __task_keys(self, todolist_key: UUID) -> list[UUID]:
         todolist_events = self._event_store.events_for(key=todolist_key)
-        task_keys : list[UUID] = []
+        task_keys = None
         for event in todolist_events:
             match event:
                 case TodoListCreated():
-                    pass
+                    task_keys = []
                 case TaskAttached(task_key=task_key):
                     task_keys.append(task_key)
                     pass
