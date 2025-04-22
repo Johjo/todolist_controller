@@ -29,9 +29,5 @@ class TodolistControllerPort:
         pass
 
     @abstractmethod
-    def get_raw_todolist(self, todolist_key: UUID) -> str:
-        pass
-
-    @abstractmethod
     def get_events(self, aggregate_key: UUID) -> EventList:
         pass

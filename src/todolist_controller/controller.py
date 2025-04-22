@@ -27,10 +27,10 @@ class TodolistReadPort(ABC):
 
 class TodolistController(TodolistControllerPort):
     def __init__(self, uuid_generator: UuidGeneratorPort, todolist: TodolistUseCasePort, todolist_read: TodolistReadPort, event_store: EventStoreInMemory | None) -> None:
+        self.event_store = event_store
         self._in_todolist = todolist
         self._uuid_generator : UuidGeneratorPort = uuid_generator
         self._from_todolist = todolist_read
-        self._event_store = event_store
 
     def create_todolist(self) -> UUID:
         todolist_key = self._uuid_generator.generate_uuid()
@@ -53,11 +53,6 @@ class TodolistController(TodolistControllerPort):
 
     def close_task(self, todolist_key: UUID, task_key: UUID) -> None:
         raise NotImplementedError()
-
-    def get_raw_todolist(self, todolist_key: UUID) -> str:
-        if not self._event_store:
-            return ""
-        return str(self._event_store.events_for(key=todolist_key))
 
     def get_events(self, aggregate_key: UUID) -> EventList:
         return self._from_todolist.get_events(aggregate_key=aggregate_key)
