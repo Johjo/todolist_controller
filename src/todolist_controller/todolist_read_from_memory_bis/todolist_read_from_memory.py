@@ -35,16 +35,3 @@ class TodolistReadFromMemory(GetTodolistBuiltIn, TodolistReadPort):
 
         return task_presentation
 
-    def _task_keys(self, todolist_key: UUID) -> list[UUID]:
-        todolist_events = self._event_store.events_for(key=todolist_key)
-        task_keys : list[UUID] = []
-        for event in todolist_events:
-            match event:
-                case TodoListCreated():
-                    pass
-                case TaskAttached(task_key=task_key):
-                    task_keys.append(task_key)
-                    pass
-                case _:
-                    raise Exception(f"Event {event} is not implemented")
-        return task_keys
