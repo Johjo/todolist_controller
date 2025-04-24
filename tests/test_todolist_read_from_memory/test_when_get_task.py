@@ -1,6 +1,7 @@
 from uuid import uuid4
 
 import pytest
+from datetime_provider import DateTimeProviderDeterministic
 from todolist_hexagon.secondary.event_store_in_memory import EventStoreInMemory
 from todolist_hexagon.todolist_usecase import TodolistUseCase
 
@@ -47,13 +48,6 @@ def uuid_generator() -> UuidGeneratorRandom:
 @pytest.fixture
 def sut(event_store: EventStoreInMemory) -> TodolistReadFromMemory:
     return TodolistReadFromMemory(event_store=event_store)
-
-@pytest.fixture
-def controller(uuid_generator: UuidGeneratorQueue, sut: TodolistReadFromMemory,
-               event_store: EventStoreInMemory) -> TodolistController:
-    return TodolistController(uuid_generator=uuid_generator,
-                                    todolist=TodolistUseCase(event_store=event_store), event_store=None,
-                                    todolist_read=sut)
 
 @pytest.fixture
 def event_store() -> EventStoreInMemory:

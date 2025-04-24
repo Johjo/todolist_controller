@@ -10,4 +10,5 @@ class Task:
 
 @dataclass
 class TodolistPresentation:
+    key: UUID
     tasks: list[Task]

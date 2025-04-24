@@ -5,6 +5,7 @@ from todolist_hexagon.events import TaskDescribed, TaskOpened, TodoListCreated
 from todolist_hexagon.secondary.event_store_in_memory import EventStoreInMemory
 from todolist_hexagon.todolist_usecase import TodolistUseCase
 
+from tests.fixture import NOW
 from todolist_controller.controller import TodolistController
 from todolist_controller.presentation.task import TaskPresentation
 from todolist_controller.todolist_read_from_memory.todolist_read_from_memory import TodolistReadFromMemory
@@ -21,7 +22,7 @@ def test_give_event_when_todolist_is_newly_created(uuid_generator: UuidGenerator
     todolist_key = controller.create_todolist()
 
     actual = sut.get_events(aggregate_key=todolist_key)
-    assert actual == [TodoListCreated(todolist_key=todolist_key)]
+    assert actual == [TodoListCreated(todolist_key=todolist_key, when=NOW)]
 
 
 
@@ -30,7 +31,7 @@ def test_give_task_when_todolist_one_task_is_attached(uuid_generator: UuidGenera
     task_one_key = controller.open_task(todolist_key=todolist_key, title="buy the milk", description="at super market")
 
     actual = sut.get_events(aggregate_key=task_one_key)
-    assert actual == [TaskDescribed(title="buy the milk", description="at super market"), TaskOpened()]
+    assert actual == [TaskDescribed(title="buy the milk", description="at super market", when=NOW), TaskOpened(when=NOW)]
 
 
 # @pytest.mark.skip
@@ -57,12 +58,6 @@ def uuid_generator() -> UuidGeneratorRandom:
 def sut(event_store: EventStoreInMemory) -> TodolistReadFromMemory:
     return TodolistReadFromMemory(event_store=event_store)
 
-@pytest.fixture
-def controller(uuid_generator: UuidGeneratorQueue, sut: TodolistReadFromMemory,
-               event_store: EventStoreInMemory) -> TodolistController:
-    return TodolistController(uuid_generator=uuid_generator,
-                                    todolist=TodolistUseCase(event_store=event_store), event_store=None,
-                                    todolist_read=sut)
 
 @pytest.fixture
 def event_store() -> EventStoreInMemory:

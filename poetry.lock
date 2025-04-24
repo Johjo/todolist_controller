@@ -14,6 +14,25 @@ files = [
 ]
 
 [[package]]
+name = "datetime-provider"
+version = "0.1.0"
+description = ""
+optional = false
+python-versions = ">=3.13"
+groups = ["main"]
+files = []
+develop = false
+
+[package.dependencies]
+pytest = ">=8.3.5,<9.0.0"
+
+[package.source]
+type = "git"
+url = "https://github.com/Johjo/python_date_time_provider.git"
+reference = "HEAD"
+resolved_reference = "724e4cc39d421c80b6b2684bcd8724e20808257f"
+
+[[package]]
 name = "iniconfig"
 version = "2.1.0"
 description = "brain-dead simple config-ini parsing"
@@ -150,6 +169,7 @@ files = []
 develop = false
 
 [package.dependencies]
+datetime-provider = {git = "https://github.com/Johjo/python_date_time_provider.git"}
 mypy = ">=1.15.0,<2.0.0"
 pytest = ">=8.3.5,<9.0.0"
 
@@ -157,7 +177,7 @@ pytest = ">=8.3.5,<9.0.0"
 type = "git"
 url = "https://github.com/Johjo/todolist_hexagon.git"
 reference = "HEAD"
-resolved_reference = "211c3d1f8645baa92fbd78aa086db739940c34bf"
+resolved_reference = "6884f846ebe77190ecd9fcabe15d19cbc473b7bd"
 
 [[package]]
 name = "typing-extensions"

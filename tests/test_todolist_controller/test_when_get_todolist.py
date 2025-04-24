@@ -16,10 +16,11 @@ def test_give_nothing_when_todolist_does_not_exist(sut: TodolistController, todo
 
 def test_give_todolist(sut: TodolistController, todolist_read: TodolistReadForTest) -> None:
     todolist_key = uuid4()
-    expected = TodolistPresentation(tasks=[
+    expected = TodolistPresentation(key = todolist_key, tasks=[
         Task(key=uuid4(), name="buy the milk", is_opened=True),
         Task(key=uuid4(), name="eat something", is_opened=True)])
 
     todolist_read.feed_todolist(todolist_key, expected)
 
     assert sut.get_todolist(todolist_key=todolist_key) == expected
+

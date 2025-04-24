@@ -1,5 +1,6 @@
 from uuid import UUID, uuid4
 
+from datetime_provider import DateTimeProvider
 from todolist_hexagon.secondary.event_store_in_memory import EventStoreInMemory
 from todolist_hexagon.todolist_usecase import TodolistUseCase
 
@@ -12,7 +13,7 @@ event_store = EventStoreInMemory()
 
 def create_todolist_controller() -> TodolistControllerPort:
     return TodolistController(uuid_generator=UuidGeneratorRandom(),
-                              todolist=TodolistUseCase(event_store=event_store), todolist_read=TodolistReadFromMemory(event_store), event_store=event_store)
+                              todolist=TodolistUseCase(event_store=event_store, datetime_provider=DateTimeProvider()), todolist_read=TodolistReadFromMemory(event_store), event_store=event_store)
 
 
 class UuidGeneratorRandom(UuidGeneratorPort):
