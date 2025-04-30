@@ -22,7 +22,7 @@ def test_give_event_when_todolist_is_newly_created(uuid_generator: UuidGenerator
     todolist_key = controller.create_todolist()
 
     actual = sut.get_events(aggregate_key=todolist_key)
-    assert actual == [TodoListCreated(todolist_key=todolist_key, when=NOW)]
+    assert actual == [TodoListCreated(when=NOW)]
 
 
 
