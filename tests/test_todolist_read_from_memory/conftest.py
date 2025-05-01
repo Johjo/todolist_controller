@@ -32,5 +32,4 @@ def controller(uuid_generator: UuidGeneratorQueue, sut: TodolistReadFromMemory,
                event_store: EventStoreInMemory, datetime_provider: DateTimeProviderDeterministic) -> TodolistController:
     return TodolistController(uuid_generator=uuid_generator,
                               todolist=TodolistUseCase(event_store=event_store, datetime_provider=datetime_provider),
-                              event_store=None,
                               todolist_read=sut)

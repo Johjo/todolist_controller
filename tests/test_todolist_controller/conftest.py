@@ -7,7 +7,7 @@ from todolist_controller.controller import TodolistController
 @pytest.fixture
 def sut(uuid_generator: UuidGeneratorForTest, todolist_use_case: TodolistUseCaseForTest,
         todolist_read: TodolistReadForTest) -> TodolistController:
-    return TodolistController(uuid_generator, todolist_use_case, todolist_read, event_store=None)
+    return TodolistController(uuid_generator, todolist_use_case, todolist_read)
 
 
 @pytest.fixture
