@@ -1,24 +1,22 @@
 from uuid import uuid4
 
 import pytest
+
 from todolist_hexagon.events import TaskDescribed, TaskOpened, TodoListCreated
 from todolist_hexagon.secondary.event_store_in_memory import EventStoreInMemory
-from todolist_hexagon.todolist_usecase import TodolistUseCase
 
 from tests.fixture import NOW
 from todolist_controller.controller import TodolistController
-from todolist_controller.presentation.task import TaskPresentation
-from todolist_controller.todolist_read_from_memory.todolist_read_from_memory import TodolistReadFromMemory
+from todolist_controller.todolist_read_from_event_store.todolist_read_from_event_store import TodolistReadFromEventStore
 from todolist_controller.usage import UuidGeneratorRandom
-from todolist_controller.uuid_generator_queue import UuidGeneratorQueue
 
 
-def test_give_no_event(sut: TodolistReadFromMemory) -> None:
+def test_give_no_event(sut: TodolistReadFromEventStore) -> None:
     actual = sut.get_events(aggregate_key=uuid4())
     assert actual == []
 
 
-def test_give_event_when_todolist_is_newly_created(uuid_generator: UuidGeneratorRandom, sut: TodolistReadFromMemory, controller: TodolistController) -> None:
+def test_give_event_when_todolist_is_newly_created(uuid_generator: UuidGeneratorRandom, sut: TodolistReadFromEventStore, controller: TodolistController) -> None:
     todolist_key = controller.create_todolist()
 
     actual = sut.get_events(aggregate_key=todolist_key)
@@ -26,7 +24,7 @@ def test_give_event_when_todolist_is_newly_created(uuid_generator: UuidGenerator
 
 
 
-def test_give_task_when_todolist_one_task_is_attached(uuid_generator: UuidGeneratorRandom, sut: TodolistReadFromMemory, controller: TodolistController, event_store: EventStoreInMemory) -> None:
+def test_give_task_when_todolist_one_task_is_attached(uuid_generator: UuidGeneratorRandom, sut: TodolistReadFromEventStore, controller: TodolistController, event_store: EventStoreInMemory) -> None:
     todolist_key = controller.create_todolist()
     task_one_key = controller.open_task(todolist_key=todolist_key, title="buy the milk", description="at super market")
 
@@ -35,7 +33,7 @@ def test_give_task_when_todolist_one_task_is_attached(uuid_generator: UuidGenera
 
 
 # @pytest.mark.skip
-# def test_give_two_tasks_when_todolist_two_task_are_attached(uuid_generator: UuidGeneratorRandom, sut: TodolistReadFromMemory, controller: TodolistController, event_store: EventStoreInMemory) -> None:
+# def test_give_two_tasks_when_todolist_two_task_are_attached(uuid_generator: UuidGeneratorRandom, sut: TodolistReadFromEventStore, controller: TodolistController, event_store: EventStoreInMemory) -> None:
 #     todolist_key = controller.create_todolist()
 #     task_one_key = controller.open_task(todolist_key=todolist_key, title="buy the milk", description="at super market")
 #     task_two_key = controller.open_task(todolist_key=todolist_key, title="buy the water", description="at home")
@@ -55,8 +53,8 @@ def uuid_generator() -> UuidGeneratorRandom:
     return UuidGeneratorRandom()
 
 @pytest.fixture
-def sut(event_store: EventStoreInMemory) -> TodolistReadFromMemory:
-    return TodolistReadFromMemory(event_store=event_store)
+def sut(event_store: EventStoreInMemory) -> TodolistReadFromEventStore:
+    return TodolistReadFromEventStore(event_store=event_store)
 
 
 @pytest.fixture

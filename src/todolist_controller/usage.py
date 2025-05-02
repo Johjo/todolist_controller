@@ -8,7 +8,7 @@ from todolist_controller.controller import TodolistController
 from todolist_controller.primary_port import TodolistControllerPort
 from todolist_controller.secondary_port import UuidGeneratorPort
 from todolist_controller.todolist.secondary.event_store_pgsql import EventStorePgsql
-from todolist_controller.todolist_read_from_memory.todolist_read_from_memory import TodolistReadFromMemory
+from todolist_controller.todolist_read_from_event_store.todolist_read_from_event_store import TodolistReadFromEventStore
 
 
 def create_todolist_controller(*, db_name: str, db_user: str, db_password: str,
@@ -22,7 +22,7 @@ def create_todolist_controller(*, db_name: str, db_user: str, db_password: str,
     ))
 
     return TodolistController(uuid_generator=UuidGeneratorRandom(),
-                              todolist=TodolistUseCase(event_store=event_store, datetime_provider=DateTimeProvider()), todolist_read=TodolistReadFromMemory(event_store))
+                              todolist=TodolistUseCase(event_store=event_store, datetime_provider=DateTimeProvider()), todolist_read=TodolistReadFromEventStore(event_store))
 
 
 class UuidGeneratorRandom(UuidGeneratorPort):

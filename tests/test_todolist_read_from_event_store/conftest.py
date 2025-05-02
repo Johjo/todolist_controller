@@ -5,7 +5,7 @@ from todolist_hexagon.todolist_usecase import TodolistUseCase
 
 from tests.fixture import NOW
 from todolist_controller.controller import TodolistController
-from todolist_controller.todolist_read_from_memory.todolist_read_from_memory import TodolistReadFromMemory
+from todolist_controller.todolist_read_from_event_store.todolist_read_from_event_store import TodolistReadFromEventStore
 from todolist_controller.usage import UuidGeneratorRandom
 from todolist_controller.uuid_generator_queue import UuidGeneratorQueue
 
@@ -28,7 +28,7 @@ def event_store() -> EventStoreInMemory:
 
 
 @pytest.fixture
-def controller(uuid_generator: UuidGeneratorQueue, sut: TodolistReadFromMemory,
+def controller(uuid_generator: UuidGeneratorQueue, sut: TodolistReadFromEventStore,
                event_store: EventStoreInMemory, datetime_provider: DateTimeProviderDeterministic) -> TodolistController:
     return TodolistController(uuid_generator=uuid_generator,
                               todolist=TodolistUseCase(event_store=event_store, datetime_provider=datetime_provider),
