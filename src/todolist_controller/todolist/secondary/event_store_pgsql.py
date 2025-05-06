@@ -4,7 +4,7 @@ from uuid import UUID
 
 import psycopg2
 from todolist_hexagon.events import EventList, EventBase, TaskOpened, TaskClosed, TodoListCreated, TaskDescribed, \
-    TaskAttached, Event
+    TaskAttached, Event, SubTaskAttached
 from todolist_hexagon.ports import EventStorePort, AggregateEvent
 
 
@@ -33,7 +33,7 @@ class EventStorePgsql(EventStorePort):
                 return json.dumps({})
             case TaskDescribed(title=title, description=description):
                 return json.dumps({"title": title, "description": description})
-            case TaskAttached(task_key=task_key):
+            case TaskAttached(task_key=task_key) | SubTaskAttached(task_key=task_key):
                 return json.dumps({"task_key": str(task_key)})
             case _:
                 raise NotImplementedError(event)
@@ -52,5 +52,7 @@ class EventStorePgsql(EventStorePort):
                 return TodoListCreated(when=when)
             case "TaskAttached":
                 return TaskAttached(task_key=UUID(payload["task_key"]), when=when)
+            case "SubTaskAttached":
+                return SubTaskAttached(task_key=UUID(payload["task_key"]), when=when)
             case _:
                 raise NotImplementedError(row[1])

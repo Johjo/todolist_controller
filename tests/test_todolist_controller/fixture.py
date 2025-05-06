@@ -59,6 +59,14 @@ class OpenTask:
 
 
 @dataclass
+class OpenSubTask:
+    parent_task_key: UUID
+    children_task_key: UUID
+    title: str
+    description: str
+
+
+@dataclass
 class CreateTodolist:
     todolist_key: UUID
 
@@ -68,7 +76,7 @@ class CloseTask:
     task_key: UUID
 
 
-History = OpenTask | CreateTodolist | CloseTask
+History = OpenTask | CreateTodolist | CloseTask | OpenSubTask
 
 
 class TodolistUseCaseForTest(TodolistUseCasePort):
@@ -81,6 +89,11 @@ class TodolistUseCaseForTest(TodolistUseCasePort):
 
     def open_task(self, todolist_key: UUID, task_key: UUID, title: str, description: str) -> None:
         self._history.append(OpenTask(todolist_key=todolist_key, task_key=task_key, title=title, description=description))
+
+    def open_sub_task(self, parent_task_key: UUID, children_task_key: UUID, title: str, description: str) -> None:
+        self._history.append(
+            OpenSubTask(parent_task_key=parent_task_key, children_task_key=children_task_key, title=title,
+                        description=description))
 
     def close_task(self, task_key: UUID) -> None:
         self._history.append(CloseTask(task_key=task_key))

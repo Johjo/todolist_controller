@@ -17,6 +17,10 @@ class TodolistControllerPort:
         pass
 
     @abstractmethod
+    def open_sub_task(self, parent_task_key: UUID, title: str, description: str) -> UUID:
+        pass
+
+    @abstractmethod
     def get_todolist(self, todolist_key: UUID) -> TodolistPresentation | None:
         pass
 
