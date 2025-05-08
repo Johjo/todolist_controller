@@ -45,6 +45,8 @@ class GetTaskBuiltIn:
                     task_title = title
                 case TaskOpened():
                     is_opened = True
+                case SubTaskAttached():
+                    pass
                 case _:
                     raise Exception(f"Event {event} not implemented")
 
