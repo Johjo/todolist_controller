@@ -48,7 +48,7 @@ class GetTodolistBuiltIn:
                 case TaskDescribed(title=title, description=description):
                     task_title = title
                 case _:
-                    raise Exception(f"Event {event} not implemented")
+                    print(Exception(f"Event {event} not implemented"))
 
         if task_title is None or task_is_opened is None:
             return None
