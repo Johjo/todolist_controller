@@ -1,8 +1,8 @@
 from abc import abstractmethod
 from uuid import UUID
 
-from todolist_hexagon.events import EventList
-
+from todolist_hexagon.base.events import EventList
+from todolist_hexagon.events import Event
 from todolist_controller.presentation.task import TaskPresentation
 from todolist_controller.presentation.todolist import TodolistPresentation
 
@@ -33,5 +33,5 @@ class TodolistControllerPort:
         pass
 
     @abstractmethod
-    def get_events(self, aggregate_key: UUID) -> EventList:
+    def get_events(self, aggregate_key: UUID) -> EventList[Event]:
         pass

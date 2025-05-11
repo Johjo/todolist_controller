@@ -1,9 +1,9 @@
 from dataclasses import dataclass
 from uuid import UUID
 
-from todolist_hexagon.events import EventList
+from todolist_hexagon.base.events import EventList
 from todolist_hexagon.todolist_usecase import TodolistUseCasePort
-
+from todolist_hexagon.events import Event
 from todolist_controller.controller import TodolistReadPort
 from todolist_controller.presentation.task import TaskPresentation
 from todolist_controller.presentation.todolist import TodolistPresentation
@@ -12,7 +12,7 @@ from todolist_controller.secondary_port import UuidGeneratorPort
 
 class TodolistReadForTest(TodolistReadPort):
     def __init__(self) -> None:
-        self._events: dict[UUID, EventList] = {}
+        self._events: dict[UUID, EventList[Event]] = {}
         self._todolist: dict[UUID, TodolistPresentation | None] = {}
         self._tasks: dict[UUID, TaskPresentation] = {}
 
@@ -29,10 +29,10 @@ class TodolistReadForTest(TodolistReadPort):
     def get_task(self, task_key: UUID) -> TaskPresentation:
         return self._tasks[task_key]
 
-    def feed_event(self, aggregate_key: UUID, expected: EventList) -> None:
+    def feed_event(self, aggregate_key: UUID, expected: EventList[Event]) -> None:
         self._events[aggregate_key] = expected
 
-    def get_events(self, aggregate_key: UUID) -> EventList:
+    def get_events(self, aggregate_key: UUID) -> EventList[Event]:
         return self._events[aggregate_key]
 
 

@@ -1,13 +1,13 @@
 from uuid import UUID
 
-from todolist_hexagon.events import TodoListCreated, TaskAttached, TaskOpened, TaskDescribed, TaskClosed
-from todolist_hexagon.ports import EventStorePort
+from todolist_hexagon.events import TodoListCreated, TaskAttached, TaskOpened, TaskDescribed, TaskClosed, Event
+from todolist_hexagon.base.ports import EventStorePort
 
 from todolist_controller.presentation.todolist import TodolistPresentation, Task
 
 
 class GetTodolistBuiltIn:
-    def __init__(self, event_store: EventStorePort):
+    def __init__(self, event_store: EventStorePort[Event]):
         self._event_store = event_store
 
     def get_todolist(self, todolist_key: UUID) -> TodolistPresentation:

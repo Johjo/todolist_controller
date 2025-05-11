@@ -1,12 +1,12 @@
 import psycopg2
 from todolist_hexagon.adapter_contract_testing.base_test_event_store import BaseTestEventStore
-from todolist_hexagon.ports import EventStorePort
-
+from todolist_hexagon.base.ports import EventStorePort
+from todolist_hexagon.events import Event
 from todolist_controller.todolist.secondary.event_store_pgsql import EventStorePgsql
 
 
 class TestEventStorePgsql(BaseTestEventStore):
-    def _sut(self) -> EventStorePort:
+    def _sut(self) -> EventStorePort[Event]:
         connection = self.connect_to_pgsql()
         self.clean_events_table(connection)
         return EventStorePgsql(connection=connection)

@@ -1,7 +1,8 @@
 from abc import ABC, abstractmethod
 from uuid import UUID
 
-from todolist_hexagon.events import EventList
+from todolist_hexagon.base.events import EventList
+from todolist_hexagon.events import Event
 from todolist_hexagon.todolist_usecase import TodolistUseCasePort
 
 from todolist_controller.presentation.task import TaskPresentation
@@ -20,7 +21,7 @@ class TodolistReadPort(ABC):
         pass
 
     @abstractmethod
-    def get_events(self, aggregate_key: UUID) -> EventList:
+    def get_events(self, aggregate_key: UUID) -> EventList[Event]:
         pass
 
 class TodolistController(TodolistControllerPort):
@@ -51,7 +52,7 @@ class TodolistController(TodolistControllerPort):
     def close_task(self, task_key: UUID) -> None:
         self._in_todolist.close_task(task_key=task_key)
 
-    def get_events(self, aggregate_key: UUID) -> EventList:
+    def get_events(self, aggregate_key: UUID) -> EventList[Event]:
         return self._from_todolist.get_events(aggregate_key=aggregate_key)
 
     def open_sub_task(self, parent_task_key: UUID, title: str, description: str) -> UUID:

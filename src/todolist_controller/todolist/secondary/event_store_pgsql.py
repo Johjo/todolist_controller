@@ -3,16 +3,18 @@ from typing import Any
 from uuid import UUID
 
 import psycopg2
-from todolist_hexagon.events import EventList, EventBase, TaskOpened, TaskClosed, TodoListCreated, TaskDescribed, \
+from todolist_hexagon.events import TaskOpened, TaskClosed, TodoListCreated, TaskDescribed, \
     TaskAttached, Event, SubTaskAttached
-from todolist_hexagon.ports import EventStorePort, AggregateEvent
+from todolist_hexagon.base.events import EventList, EventBase
+
+from todolist_hexagon.base.ports import EventStorePort, AggregateEvent
 
 
-class EventStorePgsql(EventStorePort):
+class EventStorePgsql(EventStorePort[Event]):
     def __init__(self, connection: psycopg2.extensions.connection) -> None:
         self.conn = connection
 
-    def save(self, *aggregate_events: AggregateEvent) -> None:
+    def save(self, *aggregate_events: AggregateEvent[Event]) -> None:
         cursor = self.conn.cursor()
 
         for one_aggregate_event in aggregate_events:
@@ -22,7 +24,7 @@ class EventStorePgsql(EventStorePort):
                     (str(one_aggregate_event.key), one_event.__class__.__name__, self._serialize(one_event), one_event.when))
         self.conn.commit()
 
-    def events_for(self, key: UUID) -> EventList:
+    def events_for(self, key: UUID) -> EventList[Event]:
         cursor = self.conn.cursor()
         cursor.execute("SELECT key, event_name, payload, publication_date FROM todolist.events WHERE key = %s", (str(key),))
         return [self._to_event(row) for row in cursor.fetchall()]

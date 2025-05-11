@@ -195,9 +195,9 @@ pytest = ">=8.3.5,<9.0.0"
 
 [package.source]
 type = "git"
-url = "https://github.com/Johjo/todolist_hexagon.git"
+url = "https://github.com/Johjo/todolist_hexagon"
 reference = "HEAD"
-resolved_reference = "5d77c59db9aa397b6799f098bc49770e4093ca1f"
+resolved_reference = "58bc7c97e45343d10565fafda0ebedcfda66fa7c"
 
 [[package]]
 name = "types-psycopg2"
@@ -226,4 +226,4 @@ files = [
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.13"
-content-hash = "ec8a4cd6ce6f691607e9d6cbdd624ef1a63614269e63b263e4c5f54330c778a9"
+content-hash = "647be553fb1be96b3b23164039d9e79f9539aa02e9bfa23d5750a4e1551ecccc"
