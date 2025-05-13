@@ -35,3 +35,7 @@ class TodolistControllerPort:
     @abstractmethod
     def get_events(self, aggregate_key: UUID) -> EventList[Event]:
         pass
+
+    @abstractmethod
+    def describe_task(self, task_key : UUID, title: str | None, description: str | None) -> None:
+        pass

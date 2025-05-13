@@ -2,8 +2,10 @@ from dataclasses import dataclass
 from uuid import UUID
 
 from todolist_hexagon.base.events import EventList
-from todolist_hexagon.todolist_usecase import TodolistUseCasePort
 from todolist_hexagon.events import Event
+from todolist_hexagon.result import Result, Ok
+from todolist_hexagon.todolist_usecase import TodolistUseCasePort, TaskNotFound
+
 from todolist_controller.controller import TodolistReadPort
 from todolist_controller.presentation.task import TaskPresentation
 from todolist_controller.presentation.todolist import TodolistPresentation
@@ -65,6 +67,12 @@ class OpenSubTask:
     title: str
     description: str
 
+@dataclass
+class DescribeTask:
+    task_key: UUID
+    title: str | None
+    description: str | None
+
 
 @dataclass
 class CreateTodolist:
@@ -76,7 +84,7 @@ class CloseTask:
     task_key: UUID
 
 
-History = OpenTask | CreateTodolist | CloseTask | OpenSubTask
+History = OpenTask | CreateTodolist | CloseTask | OpenSubTask | DescribeTask
 
 
 class TodolistUseCaseForTest(TodolistUseCasePort):
@@ -97,6 +105,11 @@ class TodolistUseCaseForTest(TodolistUseCasePort):
 
     def close_task(self, task_key: UUID) -> None:
         self._history.append(CloseTask(task_key=task_key))
+
+    def describe_task(self, *, task_key: UUID, title: str | None = None, description: str | None = None) -> Result[
+        None, TaskNotFound]:
+        self._history.append(DescribeTask(task_key=task_key, title=title, description=description))
+        return Ok(None)
 
     def tasks(self, todolist_key: UUID) -> TodolistPresentation:
         return self._tasks[todolist_key]

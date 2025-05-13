@@ -197,7 +197,7 @@ pytest = ">=8.3.5,<9.0.0"
 type = "git"
 url = "https://github.com/Johjo/todolist_hexagon"
 reference = "HEAD"
-resolved_reference = "58bc7c97e45343d10565fafda0ebedcfda66fa7c"
+resolved_reference = "473469d225e349f0e22304cebcb85ef2a2b5c5eb"
 
 [[package]]
 name = "types-psycopg2"

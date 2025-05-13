@@ -61,3 +61,7 @@ class TodolistController(TodolistControllerPort):
                                         children_task_key=children_task_key, title=title,
                                         description=description)
         return children_task_key
+
+    def describe_task(self, task_key: UUID, title: str | None, description: str | None) -> None:
+        self._in_todolist.describe_task(task_key=task_key, title=title, description=description)
+
