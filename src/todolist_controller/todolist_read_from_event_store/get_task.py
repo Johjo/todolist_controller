@@ -5,6 +5,9 @@ from todolist_hexagon.base.ports import EventStorePort
 
 from todolist_controller.presentation.task import TaskPresentation, SubTask
 
+import logging
+logger = logging.getLogger(__name__)
+
 
 class GetTaskBuiltIn:
     def __init__(self, event_store: EventStorePort[Event]) -> None:
@@ -29,7 +32,7 @@ class GetTaskBuiltIn:
                     subtask_keys.append(children_task_key)
 
                 case _:
-                    raise Exception(f"Event {event} not implemented")
+                    logger.error(f"Event {event} not implemented")
 
         if task_title is None or task_is_opened is None:
             return None
@@ -48,7 +51,7 @@ class GetTaskBuiltIn:
                 case SubTaskAttached():
                     pass
                 case _:
-                    raise Exception(f"Event {event} not implemented")
+                    logger.error(f"Event {event} not implemented")
 
         return SubTask(key=task_key, name=task_title, is_opened=is_opened)
 
@@ -68,5 +71,5 @@ class GetTaskBuiltIn:
                 case SubTaskAttached(task_key=task_key):
                     task_keys.append(task_key)
                 case _:
-                    raise Exception(f"Event {event} is not implemented")
+                    logger.error(f"Event {event} not implemented")
         return task_keys

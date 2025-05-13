@@ -4,7 +4,9 @@ from todolist_hexagon.events import TodoListCreated, TaskAttached, TaskOpened, T
 from todolist_hexagon.base.ports import EventStorePort
 
 from todolist_controller.presentation.todolist import TodolistPresentation, Task
+import logging
 
+logger = logging.getLogger(__name__)
 
 class GetTodolistBuiltIn:
     def __init__(self, event_store: EventStorePort[Event]):
@@ -27,7 +29,8 @@ class GetTodolistBuiltIn:
                     task_keys.append(task_key)
                     pass
                 case _:
-                    raise Exception(f"Event {event} is not implemented")
+                    logger.error(f"Event {event} not implemented")
+
         return task_keys
 
     def __task_presentation_or_default(self, task_key : UUID) -> Task:
