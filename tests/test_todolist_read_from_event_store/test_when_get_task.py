@@ -4,7 +4,8 @@ import pytest
 from todolist_hexagon.secondary.event_store_in_memory import EventStoreInMemory
 
 from todolist_controller.controller import TodolistController
-from todolist_controller.presentation.task import TaskPresentation, SubTask
+from todolist_controller.presentation.task import TaskPresentation
+from todolist_controller.presentation.sub_task import SubTask
 from todolist_controller.todolist_read_from_event_store.todolist_read_from_event_store import TodolistReadFromEventStore
 from todolist_controller.usage import UuidGeneratorRandom
 

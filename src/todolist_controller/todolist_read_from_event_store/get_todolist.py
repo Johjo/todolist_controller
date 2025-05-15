@@ -1,10 +1,13 @@
+import logging
+from typing import cast
 from uuid import UUID
 
-from todolist_hexagon.events import TodoListCreated, TaskAttached, TaskOpened, TaskDescribed, TaskClosed, Event
 from todolist_hexagon.base.ports import EventStorePort
+from todolist_hexagon.events import TodoListCreated, TaskAttached, Event, TaskEvent
 
-from todolist_controller.presentation.todolist import TodolistPresentation, Task
-import logging
+from todolist_controller.presentation.sub_task import SubTask
+from todolist_controller.presentation.todolist import TodolistPresentation
+from todolist_controller.todolist_read_from_event_store.get_sub_task import get_sub_task
 
 logger = logging.getLogger(__name__)
 
@@ -33,29 +36,9 @@ class GetTodolistBuiltIn:
 
         return task_keys
 
-    def __task_presentation_or_default(self, task_key : UUID) -> Task:
-        task = self.__task_presentation(task_key=task_key)
-        return task if task is not None else Task(key=task_key, name="?", is_opened=False)
-
-    def __task_presentation(self, task_key: UUID) -> Task | None:
-        task_presentation = None
-        task_title = None
-        task_is_opened = None
-
-        for event in self._event_store.events_for(task_key):
-            match event:
-                case TaskOpened():
-                    task_is_opened = True
-                case TaskClosed():
-                    task_is_opened = False
-                case TaskDescribed(title=title, description=description):
-                    task_title = title
-                case _:
-                    print(Exception(f"Event {event} not implemented"))
-
-        if task_title is None or task_is_opened is None:
-            return None
-
-        return Task(key=task_key, name=task_title, is_opened=task_is_opened)
+    def __task_presentation_or_default(self, task_key: UUID) -> SubTask:
+        events = cast(list[TaskEvent], self._event_store.events_for(task_key))
+        task = get_sub_task(task_key=task_key, events=events)
+        return task if task is not None else SubTask(key=task_key, name="?", is_opened=False)
 
 

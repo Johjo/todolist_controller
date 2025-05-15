@@ -1,11 +1,14 @@
+import logging
+from typing import cast
 from uuid import UUID
 
-from todolist_hexagon.events import TaskOpened, TaskDescribed, TaskClosed, SubTaskAttached, Event
 from todolist_hexagon.base.ports import EventStorePort
+from todolist_hexagon.events import TaskOpened, TaskDescribed, TaskClosed, SubTaskAttached, Event, TaskEvent
 
-from todolist_controller.presentation.task import TaskPresentation, SubTask
+from todolist_controller.presentation.sub_task import SubTask
+from todolist_controller.presentation.task import TaskPresentation
+from todolist_controller.todolist_read_from_event_store.get_sub_task import get_sub_task
 
-import logging
 logger = logging.getLogger(__name__)
 
 
@@ -39,21 +42,9 @@ class GetTaskBuiltIn:
         return TaskPresentation(key=task_key, name=task_title, is_opened=task_is_opened,
                                 subtasks=list(map(self._sub_task_presentation, subtask_keys)))
 
-    def _sub_task_presentation(self, task_key: UUID) -> SubTask:
-        task_title = ""
-        is_opened = False
-        for event in self._event_store.events_for(task_key):
-            match event:
-                case TaskDescribed(title=title, description=description):
-                    task_title = title
-                case TaskOpened():
-                    is_opened = True
-                case SubTaskAttached():
-                    pass
-                case _:
-                    logger.error(f"Event {event} not implemented")
-
-        return SubTask(key=task_key, name=task_title, is_opened=is_opened)
+    def _sub_task_presentation(self, task_key: UUID) -> SubTask | None:
+        events = cast(list[TaskEvent], self._event_store.events_for(task_key))
+        return get_sub_task(task_key=task_key, events=events)
 
 
     def get_task(self, task_key: UUID) -> TaskPresentation | None:
