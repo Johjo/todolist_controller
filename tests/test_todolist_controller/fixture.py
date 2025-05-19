@@ -4,8 +4,8 @@ from uuid import UUID
 from todolist_hexagon.base.events import EventList
 from todolist_hexagon.events import Event
 from todolist_hexagon.result import Result, Ok
-from todolist_hexagon.todolist_usecase import TodolistUseCasePort, TaskNotFound
-
+from todolist_hexagon.todolist_usecase import TodolistUseCasePort
+from todolist_hexagon.task_error import TaskNotFound, TaskError
 from todolist_controller.controller import TodolistReadPort
 from todolist_controller.presentation.task import TaskPresentation
 from todolist_controller.presentation.todolist import TodolistPresentation
@@ -103,11 +103,12 @@ class TodolistUseCaseForTest(TodolistUseCasePort):
             OpenSubTask(parent_task_key=parent_task_key, children_task_key=children_task_key, title=title,
                         description=description))
 
-    def close_task(self, task_key: UUID) -> None:
+    def close_task(self, task_key: UUID) -> Result[None, TaskError]:
         self._history.append(CloseTask(task_key=task_key))
+        return Ok(None)
 
     def describe_task(self, *, task_key: UUID, title: str | None = None, description: str | None = None) -> Result[
-        None, TaskNotFound]:
+        None, TaskError]:
         self._history.append(DescribeTask(task_key=task_key, title=title, description=description))
         return Ok(None)
 
