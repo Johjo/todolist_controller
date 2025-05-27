@@ -26,7 +26,7 @@ class EventStorePgsql(EventStorePort[Event]):
 
     def events_for(self, key: UUID) -> EventList[Event]:
         cursor = self.conn.cursor()
-        cursor.execute("SELECT key, event_name, payload, publication_date FROM todolist.events WHERE key = %s", (str(key),))
+        cursor.execute("SELECT key, event_name, payload, publication_date FROM todolist.events WHERE key = %s ORDER BY publication_date ASC", (str(key),))
         return [self._to_event(row) for row in cursor.fetchall()]
 
     def _serialize(self, event: EventBase) -> str:
