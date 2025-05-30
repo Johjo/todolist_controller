@@ -6,7 +6,7 @@ from todolist_hexagon.events import Event
 from todolist_hexagon.result import Result, Ok
 from todolist_hexagon.todolist_usecase import TodolistUseCasePort
 from todolist_hexagon.task_error import TaskNotFound, TaskError
-from todolist_controller.controller import TodolistReadPort
+from todolist_controller.port import TodolistReadPort
 from todolist_controller.presentation.task import TaskPresentation
 from todolist_controller.presentation.todolist import TodolistPresentation
 from todolist_controller.secondary_port import UuidGeneratorPort
