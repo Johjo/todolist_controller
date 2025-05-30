@@ -1,5 +1,5 @@
 import logging
-from typing import cast
+from typing import cast, TypeGuard
 from uuid import UUID
 
 from todolist_hexagon.base.ports import EventStorePort
@@ -39,8 +39,12 @@ class GetTaskBuiltIn:
 
         if task_title is None or task_is_opened is None:
             return None
+
+        def only_task(task: SubTask | None) -> TypeGuard[SubTask]:
+            return task is not None
+
         return TaskPresentation(key=task_key, name=task_title, is_opened=task_is_opened,
-                                subtasks=list(map(self._sub_task_presentation, subtask_keys)))
+                                subtasks=list(filter(only_task, map(self._sub_task_presentation, subtask_keys))))
 
     def _sub_task_presentation(self, task_key: UUID) -> SubTask | None:
         events = cast(list[TaskEvent], self._event_store.events_for(task_key))
